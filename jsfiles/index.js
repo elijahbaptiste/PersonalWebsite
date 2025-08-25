@@ -10,6 +10,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(Path.join(__dirname)));
 app.use("/styles", express.static(Path.join(__dirname, "../styles")));
 app.use("/photos", express.static(Path.join(__dirname, "../photos")));
+app.set("views", Path.join(__dirname, "../views"));
 
 //Boilerplate nodemailer code sourced from : https://mailtrap.io/blog/nodemailer-gmail/
 const transporter = nodemailer.createTransport({
