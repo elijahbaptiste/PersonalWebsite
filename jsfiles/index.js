@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
   secure: true, // use false for STARTTLS; true for SSL on port 465
   auth: {
     user: process.env.GMAIL_User,
-    pass: process.env.GMAIL_Password, 
+    pass: process.env.GMAIL_Password,
   },
   tls: {
     rejectUnauthorized: false, // 👈 THIS bypasses the SSL certificate check
@@ -29,7 +29,7 @@ const transporter = nodemailer.createTransport({
 //Routes for internal links and pages
 app.get("/", async (req, res) => {
   res.render("mainpage");
-}); 
+});
 app.get("/aboutme", async (req, res) => {
   res.render("aboutme");
 });
@@ -69,23 +69,29 @@ app.get("/email", async (req, res) => {
   res.redirect("mailto:elijahbaptiste79@gmail.com");
 });
 
+//Route for health check. Keeps the app awake on free hosting services and prevents cold starts
+app.get("/health", async (req, res) => {
+  res.status(200).send("OK");
+});
+
 app.post("/send", async (req, res) => {
   const { name, email, message } = req.body;
 
-  const emailBody = 'You have received a new message from your website contact form.\n\n' +
-    'Here are the details:\n' +
+  const emailBody =
+    "You have received a new message from your website contact form.\n\n" +
+    "Here are the details:\n" +
     `Name: ${name}\n` +
-    `Email: ${email}\n` + 
+    `Email: ${email}\n` +
     `Message:\n${message}\n`;
 
   const mailOptions = {
     from: process.env.GMAIL_User,
     to: process.env.GMAIL_Recipient,
-    subject: 'New Contact Form Submission',
+    subject: "New Contact Form Submission",
     text: emailBody,
   };
 
-    transporter.sendMail(mailOptions, function (error, info) {
+  transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log("Error:", error);
     } else {
@@ -95,7 +101,5 @@ app.post("/send", async (req, res) => {
 
   res.redirect("/thanks");
 });
-
-
 
 app.listen(process.env.PORT || 3000);
